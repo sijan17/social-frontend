@@ -23,6 +23,10 @@ const MyRoutes = () => {
           element={isLoggedIn && user.id ? <Home /> : <Login />}
         ></Route>
         <Route
+          path="/"
+          element={isLoggedIn && user.id ? <Home /> : <Login />}
+        ></Route>
+        <Route
           path="/users"
           element={isLoggedIn && user.id ? <Users /> : <Login />}
         ></Route>
