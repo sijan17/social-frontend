@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../assets/logo.svg";
+import logo from "../assets/logo.png";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -88,11 +88,11 @@ function Register() {
             onSubmit={(event) => {
               handleSubmit(event);
             }}
-            className="flex flex-col bg-[#00000076] rounded-[2rem] px-[3rem] py-[3rem]"
+            className="md:flex mx-8 flex-col bg-[#00000076] rounded-[2rem] px-[3rem] py-[3rem]"
           >
             <div className="brand flex items-center gap-[1rem] justify-center">
-              <img src={Logo} alt="logo" className="h-[3rem]" />
-              <h1 className="text-white uppercase">Snappy</h1>
+              <img src={logo} alt="logo" className="h-[3rem]" />
+              <h1 className="text-white uppercase">Register</h1>
             </div>
             <input
               type="text"
@@ -127,7 +127,7 @@ function Register() {
               onChange={(e) => handleChange(e)}
             />
             <button
-              className="bg-[#997af0] text-white px-4 py-3 border-none font-bold mt-4 cursor-pointer rounded-[0.5rem] uppercase hover:bg-[#4e0eff] ease-in-out duration-300"
+              className="bg-[#997af0] w-full text-white px-4 py-3 border-none font-bold mt-4 cursor-pointer rounded-[0.5rem] uppercase hover:bg-[#4e0eff] ease-in-out duration-300"
               type="submit"
             >
               {loading ? (
@@ -141,12 +141,12 @@ function Register() {
                 "Login"
               )}
             </button>
-            <span className="text-white mt-4">
+            <div className="text-white mt-4 md:mt-2">
               Already user ?{" "}
               <Link to="/login">
                 <span className="text-[#4e0eff]">Login</span>
               </Link>{" "}
-            </span>
+            </div>
           </form>
         </FormContainer>
         <ToastContainer></ToastContainer>
