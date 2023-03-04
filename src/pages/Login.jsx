@@ -53,8 +53,7 @@ function Login() {
     if (data.session == true) {
       setIsLoggedIn(true);
       const user = JSON.stringify(data.user);
-      localStorage.setItem("user", user);
-      setUser(user);
+      setUser({ ...user });
 
       navigate("/home");
       return JSON.parse(user);
@@ -83,7 +82,7 @@ function Login() {
             onSubmit={(event) => {
               handleSubmit(event);
             }}
-            className="flex flex-col bg-[#00000076] rounded-[2rem] px-[3rem] py-[3rem]"
+            className="mx-8 md:flex flex-col bg-[#00000076] rounded-[2rem] px-[3rem] py-[3rem]"
           >
             <div className="brand flex items-center gap-[1rem] justify-center">
               <img src={logo} alt="logo" className="h-[3rem]" />
@@ -108,7 +107,7 @@ function Login() {
             />
 
             <button
-              className="bg-[#997af0] text-white px-4 py-3 border-none font-bold mt-4 cursor-pointer rounded-[0.5rem] uppercase hover:bg-[#4e0eff] ease-in-out duration-300"
+              className="bg-[#997af0] w-full text-white px-4 py-3 border-none font-bold mt-4 cursor-pointer rounded-[0.5rem] uppercase hover:bg-[#4e0eff] ease-in-out duration-300"
               type="submit"
             >
               {" "}
@@ -123,12 +122,12 @@ function Login() {
                 "Login"
               )}
             </button>
-            <span className="text-white mt-4">
+            <div className="text-white mt-8 md:mt-2">
               New Here ?{" "}
               <Link to="/register">
                 <span className="text-[#4e0eff]">Register</span>
               </Link>{" "}
-            </span>
+            </div>
           </form>
         </FormContainer>
         <ToastContainer></ToastContainer>

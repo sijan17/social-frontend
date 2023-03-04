@@ -130,7 +130,16 @@ function Register() {
               className="bg-[#997af0] text-white px-4 py-3 border-none font-bold mt-4 cursor-pointer rounded-[0.5rem] uppercase hover:bg-[#4e0eff] ease-in-out duration-300"
               type="submit"
             >
-              {loading ? "Please wait" : "Create User"}
+              {loading ? (
+                <div className="flex items-center justify-center space-x-2 ">
+                  <div
+                    className="inline-block h-6 w-6 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                    role="status"
+                  ></div>
+                </div>
+              ) : (
+                "Login"
+              )}
             </button>
             <span className="text-white mt-4">
               Already user ?{" "}

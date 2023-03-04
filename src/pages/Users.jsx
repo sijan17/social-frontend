@@ -1,11 +1,14 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Layout from "../components/Layout";
+import { AuthContext } from "../services/AuthContext";
 import { allUsersRoute, followRoute } from "../utils/APIRoutes";
 
 function Users() {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useContext(AuthContext);
+  console.log(user);
   useEffect(() => {
     async function getData() {
       setIsLoading(true);
@@ -17,12 +20,25 @@ function Users() {
       if (data.success) {
         setUsers(data.users);
         setIsLoading(false);
+        console.log(data.users);
       }
     }
     getData();
   }, []);
 
   const follow = async (id) => {
+    const index = users.findIndex((obj) => obj.id === id);
+
+    if (index !== -1) {
+      const updatedUsers = [...users];
+      updatedUsers[index] = {
+        ...updatedUsers[index],
+        isFollowed: updatedUsers[index].isFollowed ? false : true,
+      };
+
+      setUsers(updatedUsers);
+    }
+
     const { data } = await axios.post(
       `${followRoute}/${id}`,
       {},
@@ -38,7 +54,7 @@ function Users() {
   const listUsers = users.map((user) => {
     return (
       <div
-        key={user._id}
+        key={user.id}
         className="bg-[#343541] user flex mb-2  px-3 py-4  rounded-[8px] justify-between"
       >
         <div className="flex ">
@@ -66,11 +82,14 @@ function Users() {
         </div>
         <div className="float-right">
           <span
-            onClick={() => follow(user._id)}
+            onClick={() => follow(user.id)}
             id="follow-40"
-            className="float-right  px-2 py-0.5 border rounded-[9px] border-white text-white cursor-pointer hover:text-black hover:bg-white"
+            className={`float-right  px-2 py-0.5 border rounded-[9px] border-white text-white cursor-pointer ${
+              user.isFollowed ? "text-black bg-white" : ""
+            } hover:text-black hover:bg-white`}
           >
-            Follow
+            {" "}
+            {user.isFollowed ? "Unfollow" : "Follow"}
           </span>
         </div>
       </div>
@@ -79,22 +98,20 @@ function Users() {
 
   return (
     <Layout active="users">
-      <div className="scroll text-white bg-[#202123] w-[45%] rounded-[0.5rem] p-8 overflow-y-scroll ">
-        {isLoading ? (
-          <div className="flex items-center justify-center space-x-2 mt-4">
-            <div
-              className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-              role="status"
-            >
-              <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                Loading...
-              </span>
-            </div>
+      {isLoading ? (
+        <div className="flex items-center justify-center space-x-2 mt-4">
+          <div
+            className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+            role="status"
+          >
+            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+              Loading...
+            </span>
           </div>
-        ) : (
-          listUsers
-        )}
-      </div>
+        </div>
+      ) : (
+        listUsers
+      )}
     </Layout>
   );
 }

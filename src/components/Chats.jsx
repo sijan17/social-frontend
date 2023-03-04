@@ -3,7 +3,7 @@ import icon from "../assets/icon.png";
 
 function Chats() {
   return (
-    <div className="text-white bg-[#202123] w-[30%] rounded-[0.5rem] p-8 ">
+    <>
       <div className="mb-2 uppercase">Messages</div>
       <div className="message flex  bg-[#343541] mb-2 px-3 py-4 rounded-[8px] cursor-pointer">
         <div className="left">
@@ -41,7 +41,7 @@ function Chats() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

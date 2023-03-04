@@ -26,14 +26,14 @@ function Home() {
 
   return (
     <Layout active="home">
-      <div className="scroll text-white bg-[#202123] w-[45%] rounded-[0.5rem] p-8 overflow-y-scroll ">
+      <>
+        {" "}
         <Post
           posts={posts}
           setPosts={setPosts}
           changed={changed}
           setChanged={setChanged}
         />
-
         <Posts
           posts={posts}
           setPosts={setPosts}
@@ -41,7 +41,7 @@ function Home() {
           changed={changed}
           setChanged={setChanged}
         />
-      </div>
+      </>
     </Layout>
   );
 }

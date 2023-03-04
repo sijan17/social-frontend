@@ -8,6 +8,7 @@ import SetAvatar from "./pages/SetAvatar";
 import Users from "./pages/Users";
 import Profile from "./pages/Profile";
 import User from "./pages/User";
+import Notification from "./pages/Notifiation";
 import { AuthContext } from "./services/AuthContext";
 import { useContext, useEffect } from "react";
 import { isAuthenticated } from "./services/authService";
@@ -29,7 +30,7 @@ const MyRoutes = () => {
   }, []);
 
   return (
-    <div className="flex h-[100vh] py-8 px-8 gap-[2rem]">
+    <div className="flex flex-col md:flex-row h-[100vh] md:py-8 md:px-8 md:gap-[2rem]">
       <Routes>
         <Route path="/register" element={<Register />}></Route>
         <Route path="/login" element={<Login />}></Route>
@@ -46,6 +47,10 @@ const MyRoutes = () => {
         <Route
           path="/profile"
           element={isLoggedIn ? <Profile /> : <Login />}
+        ></Route>
+        <Route
+          path="/notification"
+          element={isLoggedIn ? <Notification /> : <Login />}
         ></Route>
         <Route
           path="/user/:username"
