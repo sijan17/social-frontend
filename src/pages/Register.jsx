@@ -82,7 +82,7 @@ function Register() {
   };
   return (
     <>
-      <div className="h-[100vh] w-[100vw] md:flex flex-col justify-center gap-[1rem] items-center bg-[#00000076] md:bg-[#343541]">
+      <div className="h-[100vh] w-[100vw] md:flex flex-col justify-center gap-[1rem] items-center bg-[#00000076] md:bg-[#343541] overflow-hidden">
         {" "}
         <FormContainer>
           <form

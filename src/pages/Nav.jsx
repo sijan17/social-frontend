@@ -25,10 +25,10 @@ function Nav(props) {
 
   return (
     <div className=" lg:w-[25%]   md:flex-shrink-0 rounded-[0.5rem] bg-[#202123] text-white">
-      <div className="hidden md:block logo text-center m-8 uppercase  font-bold">
+      <div className="hidden md:block logo text-center p-4 md:m-8 uppercase  font-bold">
         <img className="inline h-[2rem]" src={logo} />
       </div>
-      <ul className="flex mx-8 items-center justify-between  md:block md:space-y-4 md:m-8 ">
+      <ul className="flex mx-4 md:mx-8  items-center justify-between  md:block md:space-y-4 md:m-8 ">
         <Link to="/home">
           <li
             className={`flex p-2 my-2 md:p-4 rounded-[0.5rem] gap-[1rem]  ${
