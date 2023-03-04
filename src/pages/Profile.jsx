@@ -4,16 +4,19 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { FaBirthdayCake } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import axios from "axios";
-import { getAllUserDataRoute } from "../utils/APIRoutes";
+import { getAllUserDataRoute, likeRoute } from "../utils/APIRoutes";
 import { Link, useNavigate } from "react-router-dom";
-import { AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineEdit, AiOutlineHeart } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
 import { AuthContext } from "../services/AuthContext";
+import TimeAgo from "../helpers/TimeAgo";
 
 function Profile() {
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [posts, setPosts] = useState([]);
   const { setIsLoggedIn } = useContext(AuthContext);
+  const [changed, setChanged] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,16 +29,108 @@ function Profile() {
         },
       });
       if (data.success) {
+        console.log(data);
         setUser(data.user);
+        setPosts(data.user.posts);
         setIsLoading(false);
       }
     }
     getData();
   }, []);
 
+  const likePost = async (id) => {
+    const index = posts.findIndex((obj) => obj.id === id);
+
+    if (index !== -1) {
+      const updatedPosts = [...posts];
+      const isLiked = updatedPosts[index].isLiked;
+      const likes = updatedPosts[index].likes;
+      updatedPosts[index] = {
+        ...updatedPosts[index],
+        isLiked: !isLiked,
+        likes: isLiked ? likes - 1 : likes + 1,
+      };
+
+      // Update the state with the new array
+      setPosts(updatedPosts);
+
+      posts[index].isLiked == false;
+      // props.posts[index].likes += props.posts[index].isLiked ? -1 : 1;
+    }
+    const { data } = await axios.post(
+      `${likeRoute}/${id}`,
+      {},
+      {
+        headers: {
+          authorization: `token ${localStorage.getItem("user-token")}`,
+        },
+      }
+    );
+
+    console.log(data);
+    if (data.success) {
+      setChanged(changed + 1);
+    }
+  };
+
+  const postList = posts.map((post) => {
+    return (
+      <div key={post.id} className="bg-[#343541] mt-5 py-3 px-4 rounded-[8px]">
+        <div className="flex ">
+          <div className="img shrink-0">
+            <Link to={`/user/${user.username}`}>
+              <img
+                src={`data:image/svg+xml;base64,${user.avatarImage}`}
+                className="w-11 h-11 object-cover rounded-full"
+                alt=""
+              />
+            </Link>
+          </div>
+
+          <div className="content pl-3 w-screen">
+            <Link to={`/user/${user.username}`}>
+              <span className="cursor-pointer font-bold hover:underline">
+                @{user.username}
+              </span>
+            </Link>
+
+            <span className="font-thin pl-1"></span>
+            <span className="font-thin  pl-2 float-right">
+              {TimeAgo(post.time)}
+            </span>
+
+            <p className="font-light mt-1">{post.post}</p>
+
+            <div
+              className={`react-section transition-colors duration-500 transform ${
+                post.isLiked ? "ease-in-out text-red-500" : ""
+              } `}
+            >
+              <span>
+                <span className=" float-right" id="toggle-39">
+                  <a id="likecount">
+                    <AiOutlineHeart
+                      className="inline mr-2 w-6 h-6 cursor-pointer "
+                      onClick={(event) => {
+                        likePost(post.id, event);
+                      }}
+                    />
+                    <span id="likes-39">{post.likes}</span>
+                  </a>
+                </span>
+                <a className=" font-thin ml-3" id="msg-39">
+                  {/* {post.likes == 0 ? " Be the first one to like" : ""} */}
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  });
   const logout = () => {
     localStorage.removeItem("user-token");
-    setIsLoading(false);
+    setIsLoggedIn(false);
     navigate("/login");
   };
   return (
@@ -70,7 +165,6 @@ function Profile() {
                 <Link to="/setavatar">
                   <span className="float-right  border border-white rounded-[0.3rem] px-1 py-1  hover:bg-[#343541] hover:border-transparent text-white  cursor-pointer ease-in-out duration-300">
                     <AiOutlineEdit className="inline w-6 h-6" />
-                    Edit
                   </span>
                 </Link>
                 <div
@@ -91,23 +185,23 @@ function Profile() {
               <div className="font-light  mt-2 grid grid-cols-2">
                 <span className="col-span-2 flex items-center gap-2">
                   <HiOutlineLocationMarker className="inline" />
-                  <a className="ml-1">Nepal</a>
+                  <a className="ml-1">{user.location}</a>
                 </span>
-                <span className="flex items-center gap-2">
+                {/* <span className="flex items-center gap-2">
                   <FaBirthdayCake className="inline" />
                   <a className="ml-1">January 1</a>
-                </span>
-                <span className="ml-4 flex items-center gap-2">
+                </span> */}
+                <span className=" flex items-center gap-2">
                   <SlCalender className="inline" />
-                  <a className="ml-1">5Mo ago</a>
+                  <a className="ml-1">Joined {TimeAgo(user.joinedAt)}</a>
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 text-center my-4">
+          <div className="grid grid-cols-3 text-center my-4 ">
             <span className="border-r border-white">
-              <p className="font-semibold">5</p>
+              <p className="font-semibold">{user.postsCount}</p>
               <p>Posts</p>
             </span>
             <span className="border-r border-white">
@@ -124,10 +218,11 @@ function Profile() {
             </span>
           </div>
 
-          <div className="Posts">
-            <p className=" font-semibold mx-3 py-2 border-t border-gray-400">
+          <div className="Posts  mx-3 my-4">
+            <p className=" font-semibold border-t border-gray-400 pt-4">
               Posts
             </p>
+            {postList}
           </div>
         </>
       )}

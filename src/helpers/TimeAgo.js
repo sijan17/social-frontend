@@ -1,5 +1,3 @@
-import moment from "moment";
-
 export default function TimeAgo(timestamp) {
   const currentDate = new Date();
   const previousDate = new Date(timestamp);
@@ -7,7 +5,7 @@ export default function TimeAgo(timestamp) {
     (currentDate.getTime() - previousDate.getTime()) / 1000;
 
   if (elapsedSeconds < 60) {
-    return Math.floor(elapsedSeconds) + "s ago";
+    return "Just now";
   } else if (elapsedSeconds < 3600) {
     const minutes = Math.floor(elapsedSeconds / 60);
     return minutes + "m ago";

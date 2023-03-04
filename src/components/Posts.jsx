@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import TimeAgo from "../helpers/TimeAgo";
 import { likeRoute, postsRoute } from "../utils/APIRoutes";
 function Posts(props) {
-  const likePost = async (id, event) => {
+  const likePost = async (id) => {
     const index = props.posts.findIndex((obj) => obj.id === id);
 
     if (index !== -1) {
