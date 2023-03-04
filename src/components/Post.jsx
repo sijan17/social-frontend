@@ -57,7 +57,7 @@ function Post(props) {
     <div className="post relative flex">
       <textarea
         className="outline-none bg-[#343541] resize-none rounded-[0.3rem] opacity-[0.8] p-3 w-full flex-shrink-0 h-[8rem]"
-        placeholder={`What's happening, ${user.username}?`}
+        placeholder={`What's happening ?`}
         onChange={(e) => handleChange(e)}
         value={post}
       ></textarea>

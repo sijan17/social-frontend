@@ -1,15 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { FaBirthdayCake } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import axios from "axios";
 import { getAllUserDataRoute } from "../utils/APIRoutes";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AiOutlineEdit } from "react-icons/ai";
+import { FiLogOut } from "react-icons/fi";
+import { AuthContext } from "../services/AuthContext";
 
 function Profile() {
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const { setIsLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
     async function getData() {
       setIsLoading(true);
@@ -26,6 +32,12 @@ function Profile() {
     }
     getData();
   }, []);
+
+  const logout = () => {
+    localStorage.removeItem("user-token");
+    setIsLoading(false);
+    navigate("/login");
+  };
   return (
     <Layout active="profile">
       {isLoading ? (
@@ -41,15 +53,35 @@ function Profile() {
         </div>
       ) : (
         <>
-          <div className="flex items-center p-3">
-            <img
-              src={`data:image/svg+xml;base64,${user.avatarImage}`}
-              alt=""
-              className="h-[67px] w-[67px] object-cover rounded-full"
-            />
-            <span className="px-2">
-              <p className="font-semibold ">{user.username}</p>
-              <p className="font-light ">{user.username}</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center p-3">
+              <img
+                src={`data:image/svg+xml;base64,${user.avatarImage}`}
+                alt=""
+                className="h-[67px] w-[67px] object-cover rounded-full"
+              />
+              <span className="px-2">
+                <p className="font-semibold ">{user.username}</p>
+                <p className="font-light ">{user.username}</p>
+              </span>
+            </div>
+            <span className="shrink-0">
+              <div className="flex items-center gap-[1rem]">
+                <Link to="/setavatar">
+                  <span className="float-right  border border-white rounded-[0.3rem] px-1 py-1  hover:bg-[#343541] hover:border-transparent text-white  cursor-pointer ease-in-out duration-300">
+                    <AiOutlineEdit className="inline w-6 h-6" />
+                    Edit
+                  </span>
+                </Link>
+                <div
+                  onClick={() => logout()}
+                  className="border border-red-500 rounded-[0.3rem] px-1 py-1  hover:bg-[#343541] hover:border-transparent text-white  cursor-pointer ease-in-out duration-300"
+                >
+                  <span>
+                    <FiLogOut className="inline text-red-500 h-6 w-6" />
+                  </span>
+                </div>
+              </div>
             </span>
           </div>
 
@@ -71,15 +103,6 @@ function Profile() {
                 </span>
               </div>
             </div>
-            <span className="shrink-0">
-              <div className="">
-                <Link to="/setavatar">
-                  <span className="float-right px-2 border border-black rounded-full px-3 py-1 ml-4 bg-[#006175] text-white  cursor-pointer">
-                    Edit Profile
-                  </span>
-                </Link>
-              </div>
-            </span>
           </div>
 
           <div className="grid grid-cols-3 text-center my-4">

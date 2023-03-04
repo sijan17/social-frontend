@@ -12,7 +12,7 @@ function Chat() {
 
   return (
     <>
-      <Layout>
+      <Layout active="chat">
         <Chats />
         <div className="text-white bg-[#202123] w-[40%] rounded-[0.5rem] p-8 "></div>
       </Layout>

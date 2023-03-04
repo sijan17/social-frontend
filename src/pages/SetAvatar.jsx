@@ -69,48 +69,49 @@ function SetAvatar() {
   }, []);
   return (
     <>
-      <Layout>
-        <div className="text-white bg-[#202123] w-[65%] rounded-[0.5rem] p-8 flex justify-center items-center flex-col gap-[3rem] ">
-          <div className="title-container text-white p-4">
-            <h1 className=" font-bold ">Pick an avatar</h1>
-          </div>
-          {isLoading ? (
-            <div className="flex text-white items-center justify-center space-x-2 mt-4">
+      <Layout active="profile">
+        <div className="title-container text-white p-4">
+          <h1 className=" font-bold ">Pick an avatar</h1>
+        </div>
+
+        <div className="avatars flex gap-[1rem] md:gap-[2rem] ">
+          {avatars.map((avatar, index) => {
+            return (
               <div
-                className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                role="status"
+                key={index}
+                className={`avatar   flex justify-center items-center ease-in-out duration-300 `}
               >
-                <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                  Loading...
-                </span>
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-          <div className="avatars flex gap-[2rem] ">
-            {avatars.map((avatar, index) => {
-              return (
-                <div
-                  key={index}
-                  className={`avatar border-[0.4rem] rounded-full flex justify-center items-center ease-in-out duration-300 ${
+                <img
+                  src={`data:image/svg+xml;base64,${avatar}`}
+                  alt={`avatar${index}`}
+                  className={`h-[4rem] md:h-[6rem]  rounded-full border-[0.4rem] ${
                     selectedAvatar === index
                       ? "selected  border-[#4e0eff]"
                       : " border-transparent"
                   }`}
-                >
-                  <img
-                    src={`data:image/svg+xml;base64,${avatar}`}
-                    alt={`avatar${index}`}
-                    className="h-[6rem] rounded-full"
-                    onClick={() => setSelectedAvatar(index)}
-                  />
-                </div>
-              );
-            })}
+                  onClick={() => setSelectedAvatar(index)}
+                />
+              </div>
+            );
+          })}
+        </div>
+        {isLoading ? (
+          <div className="flex text-white items-center justify-center space-x-2 mt-4">
+            <div
+              className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+              role="status"
+            >
+              <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                Loading...
+              </span>
+            </div>
           </div>
+        ) : (
+          ""
+        )}
+        <div className="flex items-center justify-between w-full">
           <button
-            className="submitBtn bg-[#4e0eff] text-white px-4 py-3  border-none font-bold mt-4 cursor-pointer rounded-[0.5rem] uppercase hover:bg-[#997af0] ease-in-out duration-300"
+            className="text-center submitBtn bg-[#4e0eff] text-white px-2 py-2  border-none font-bold mt-4 cursor-pointer rounded-[0.5rem] uppercase hover:bg-[#997af0] ease-in-out duration-300"
             onClick={setProfilePicture}
           >
             CONTINUE

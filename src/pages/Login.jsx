@@ -76,13 +76,13 @@ function Login() {
   };
   return (
     <>
-      <div className="h-[100vh] w-[100vw] flex flex-col justify-center gap-[1rem] items-center bg-[#343541]">
+      <div className="h-[100vh] w-[100vw] md:flex flex-col justify-center gap-[1rem] items-center bg-[#00000076] md:bg-[#343541]">
         <FormContainer>
           <form
             onSubmit={(event) => {
               handleSubmit(event);
             }}
-            className="mx-8 md:flex flex-col bg-[#00000076] rounded-[2rem] px-[3rem] py-[3rem]"
+            className="absolute top-[30%] md:relative mx-8 md:flex flex-col md:bg-[#00000076] rounded-[2rem] md:px-[3rem] py-[3rem]"
           >
             <div className="brand flex items-center gap-[1rem] justify-center">
               <img src={logo} alt="logo" className="h-[3rem]" />
