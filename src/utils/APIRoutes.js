@@ -1,4 +1,5 @@
-const host = "http://localhost:5000";
+// const host = "http://localhost:5000";
+const host = "https://socialbackend-ukk3.onrender.com";
 export const registerRoute = `${host}/api/auth/register`;
 export const loginRoute = `${host}/api/auth/login`;
 export const setAvatarRoute = `${host}/api/user/setavatar`;
