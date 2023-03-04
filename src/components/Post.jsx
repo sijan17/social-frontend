@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import AuthContext from "../services/AuthContext";
+import { AuthContext } from "../services/AuthContext";
 import { postRoute } from "../utils/APIRoutes";
 
 function Post(props) {

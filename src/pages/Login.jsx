@@ -6,10 +6,12 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { checkAuthRoute, loginRoute } from "../utils/APIRoutes";
-import AuthContext from "../services/AuthContext";
+import { AuthContext } from "../services/AuthContext";
 function Login() {
   const navigate = useNavigate();
-  const { setIsLoggedIn, setUser } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const { setIsLoggedIn, isLoggedIn, setUser } = useContext(AuthContext);
+
   const [values, setValues] = useState({
     username: "",
 
@@ -25,7 +27,7 @@ function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setIsLoading(true);
     if (handleValidation()) {
       const { username, password } = values;
       const { data } = await axios.post(loginRoute, { username, password });
@@ -35,9 +37,9 @@ function Login() {
       } else if (data.status == true) {
         localStorage.setItem("user-token", JSON.stringify(data.user));
         userData();
-        navigate("/home");
       }
     }
+    setIsLoading(false);
   };
 
   const userData = async () => {
@@ -52,6 +54,9 @@ function Login() {
       setIsLoggedIn(true);
       const user = JSON.stringify(data.user);
       localStorage.setItem("user", user);
+      setUser(user);
+
+      navigate("/home");
       return JSON.parse(user);
     } else {
       return {};
@@ -106,7 +111,17 @@ function Login() {
               className="bg-[#997af0] text-white px-4 py-3 border-none font-bold mt-4 cursor-pointer rounded-[0.5rem] uppercase hover:bg-[#4e0eff] ease-in-out duration-300"
               type="submit"
             >
-              Login
+              {" "}
+              {isLoading ? (
+                <div className="flex items-center justify-center space-x-2 ">
+                  <div
+                    className="inline-block h-6 w-6 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                    role="status"
+                  ></div>
+                </div>
+              ) : (
+                "Login"
+              )}
             </button>
             <span className="text-white mt-4">
               New Here ?{" "}

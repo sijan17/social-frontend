@@ -7,7 +7,7 @@ import axios from "axios";
 import { Buffer } from "buffer";
 import Layout from "../components/Layout";
 import { useContext } from "react";
-import AuthContext from "../services/AuthContext";
+import { AuthContext } from "../services/AuthContext";
 function SetAvatar() {
   const api = "https://api.multiavatar.com/45678945";
   const navigate = useNavigate();

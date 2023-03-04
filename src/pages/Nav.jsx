@@ -14,17 +14,15 @@ import { IoMdNotifications } from "react-icons/io";
 
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
-import AuthContext from "../services/AuthContext";
+import { AuthContext } from "../services/AuthContext";
 
 function Nav(props) {
-  // const [currentUser, setCurrentUser] = useContext(UserContext);
-  const { isLoggedIn, user } = useContext(AuthContext);
+  const { user, setUser, isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("user-token");
-    // user = {};
-
+    setIsLoggedIn(false);
     navigate("/login");
   };
 

@@ -7,7 +7,7 @@ import { BiMessageRounded } from "react-icons/bi";
 import axios from "axios";
 import { getAllUserDataRoute } from "../utils/APIRoutes";
 import { Link, useParams } from "react-router-dom";
-import AuthContext from "../services/AuthContext";
+import { AuthContext } from "../services/AuthContext";
 
 function User() {
   const username = useParams().username;
