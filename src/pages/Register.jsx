@@ -48,7 +48,6 @@ function Register() {
 
   const handleValidation = () => {
     const { username, email, password, confirmpassword } = values;
-    console.log(confirmpassword);
     const toastOptions = {
       position: "bottom-right",
       autoClose: 8000,
@@ -89,7 +88,7 @@ function Register() {
             onSubmit={(event) => {
               handleSubmit(event);
             }}
-            className="absolute top-[10vh] md:relative mx-8 md:flex flex-col md:bg-[#00000076] rounded-[2rem] md:px-[3rem] py-[3rem]"
+            className="absolute top-[10vh] md:static mx-8 md:flex flex-col md:bg-[#00000076] rounded-[2rem] md:px-[3rem] py-[3rem]"
           >
             <div className="brand flex items-center gap-[1rem] justify-center">
               <img src={logo} alt="logo" className="h-[3rem]" />
@@ -139,7 +138,7 @@ function Register() {
                   ></div>
                 </div>
               ) : (
-                "Login"
+                "Register"
               )}
             </button>
             <div className="text-white mt-4 md:mt-2">

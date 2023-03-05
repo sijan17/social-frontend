@@ -20,7 +20,6 @@ function Users() {
       });
       if (data.success) {
         setUsers(data.users);
-        console.log(data.users);
         setIsLoading(false);
       }
     }
@@ -49,7 +48,6 @@ function Users() {
         },
       }
     );
-    console.log(data);
   };
 
   const listUsers =

@@ -36,7 +36,6 @@ function User() {
         },
       });
       if (data.success) {
-        console.log(data);
         setUser(data.user);
         setPosts(data.user.posts);
         setIsLoading(false);
@@ -74,7 +73,6 @@ function User() {
       }
     );
 
-    console.log(data);
     if (data.success) {
       setChanged(changed + 1);
     }
@@ -98,7 +96,6 @@ function User() {
         },
       }
     );
-    console.log(data);
   };
 
   const postList = posts.map((post) => {

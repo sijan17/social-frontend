@@ -11,23 +11,10 @@ import User from "./pages/User";
 import Notification from "./pages/Notifiation";
 import { AuthContext } from "./services/AuthContext";
 import { useContext, useEffect } from "react";
-import { isAuthenticated } from "./services/authService";
+import ChatContainer1 from "./components/ChatContainer1";
 
 const MyRoutes = () => {
-  const { isLoggedIn, setIsLoggedIn, user, setUser } = useContext(AuthContext);
-  useEffect(() => {
-    const checkLoggedIn = async () => {
-      let cuser = await isAuthenticated();
-      if (!cuser) {
-        localStorage.setItem("user-token", "");
-      } else {
-        setIsLoggedIn(true);
-        setUser({ ...cuser });
-      }
-    };
-
-    checkLoggedIn();
-  }, []);
+  const { isLoggedIn } = useContext(AuthContext);
 
   return (
     <div className="flex flex-col md:flex-row h-[100vh] md:py-8 md:px-8 md:gap-[2rem]">
@@ -55,6 +42,10 @@ const MyRoutes = () => {
         <Route
           path="/user/:username"
           element={isLoggedIn ? <User /> : <Login />}
+        ></Route>
+        <Route
+          path="/chat/:username"
+          element={isLoggedIn ? <ChatContainer1 /> : <Login />}
         ></Route>
         <Route path="/chat" element={isLoggedIn ? <Chat /> : <Login />}></Route>
         <Route

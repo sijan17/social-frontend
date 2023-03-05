@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { HashRouter } from "react-router-dom";
 import { isAuthenticated } from "./services/authService";
 import MyRoutes from "./MyRoutes";
-import { AuthContext, AuthProvider } from "./services/AuthContext";
+import { AuthProvider } from "./services/AuthContext";
 
 function App() {
   return (

@@ -10,7 +10,7 @@ import { AuthContext } from "../services/AuthContext";
 function Login() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const { setIsLoggedIn, isLoggedIn, setUser } = useContext(AuthContext);
+  const { setIsLoggedIn } = useContext(AuthContext);
 
   const [values, setValues] = useState({
     username: "",
@@ -53,8 +53,7 @@ function Login() {
     if (data.session == true) {
       setIsLoggedIn(true);
       const user = JSON.stringify(data.user);
-      setUser({ ...user });
-
+      // setUser({ ...user });
       navigate("/home");
       return JSON.parse(user);
     } else {
@@ -82,7 +81,7 @@ function Login() {
             onSubmit={(event) => {
               handleSubmit(event);
             }}
-            className="absolute top-[25%] md:relative mx-8 md:flex flex-col md:bg-[#00000076] rounded-[2rem] md:px-[3rem] py-[3rem]"
+            className="absolute top-[25%] md:static mx-8 md:flex flex-col md:bg-[#00000076] rounded-[2rem] md:px-[3rem] py-[3rem]"
           >
             <div className="brand flex items-center gap-[1rem] justify-center">
               <img src={logo} alt="logo" className="h-[3rem]" />

@@ -34,7 +34,6 @@ function Posts(props) {
       }
     );
 
-    console.log(data);
     if (data.success) {
       props.setChanged(props.changed + 1);
     }
