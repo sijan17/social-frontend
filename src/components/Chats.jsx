@@ -41,7 +41,7 @@ function Chats({ contacts, currentUser, changeChat }) {
               </div>
 
               <div className="bottom w-full">
-                <p className="font-bold">New Message</p>
+                <p className="text-sm">Say Hello. </p>
               </div>
             </div>
           </div>

@@ -24,7 +24,7 @@ function Nav(props) {
   };
 
   return (
-    <div className="scroll lg:w-[25%] overflow-scroll md:flex-shrink-0 rounded-[0.5rem] bg-[#202123] text-white">
+    <div className="scroll lg:w-[25%] overflow-y-scroll md:flex-shrink-0 rounded-[0.5rem] bg-[#202123] text-white">
       <div className="hidden md:block logo text-center px-4 md:m-8 uppercase  font-bold">
         <img className="inline h-[2rem]" src={logo} />
       </div>

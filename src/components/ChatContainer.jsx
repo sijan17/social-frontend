@@ -25,6 +25,12 @@ function ChatContainer({ currentChat, currentUser, socket }) {
     getData();
   }, [currentChat]);
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSendMsg(message);
+    }
+  };
+
   const handleChange = (e) => {
     const { value } = e.target;
     setMessage(value);
@@ -111,6 +117,7 @@ function ChatContainer({ currentChat, currentUser, socket }) {
           <input
             type="text"
             placeholder={`Type your message to ${currentChat.username}`}
+            onKeyDown={(e) => handleKeyPress(e)}
             className="outline-none bg-[#343541] resize-none rounded-[0.3rem] opacity-[0.8] p-3 w-full "
             name="message"
             onChange={(e) => {

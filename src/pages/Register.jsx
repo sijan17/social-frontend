@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
@@ -6,9 +6,11 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { registerRoute } from "../utils/APIRoutes";
+import { AuthContext } from "../services/AuthContext";
 function Register() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { setIsLoggedIn } = useContext(AuthContext);
   const [values, setValues] = useState({
     username: "",
     email: "",
@@ -38,6 +40,7 @@ function Register() {
         toast.error(data.msg, toastOptions);
       } else if (data.status === true) {
         localStorage.setItem("user-token", JSON.stringify(data.user));
+        setIsLoggedIn(true);
         navigate("/setavatar");
       } else {
         toast.error("Something went wrong. Try again laters.", toastOptions);
@@ -88,7 +91,7 @@ function Register() {
             onSubmit={(event) => {
               handleSubmit(event);
             }}
-            className="absolute top-[10vh] md:static mx-8 md:flex flex-col md:bg-[#00000076] rounded-[2rem] md:px-[3rem] py-[3rem]"
+            className="absolute top-[10vh] md:static md:w-full mx-8 md:flex flex-col md:bg-[#00000076] rounded-[2rem] md:px-[3rem] py-[3rem]"
           >
             <div className="brand flex items-center gap-[1rem] justify-center">
               <img src={logo} alt="logo" className="h-[3rem]" />

@@ -3,10 +3,19 @@ import React, { useContext, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { AuthContext } from "../services/AuthContext";
 import { postRoute } from "../utils/APIRoutes";
+import { AiOutlineCloseCircle } from "react-icons/ai";
+import { BsImage } from "react-icons/bs";
+import { GoLocation } from "react-icons/go";
+import Dropzone from "react-dropzone";
 
 function Post(props) {
+  const [focus, setFocus] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState("");
   const { user } = useContext(AuthContext);
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+
   const toastOptions = {
     position: "bottom-right",
     autoClose: 4000,
@@ -14,27 +23,43 @@ function Post(props) {
     draggable: true,
     theme: "dark",
   };
+
   const handleChange = (e) => {
     setPost(e.target.value);
   };
+
+  const handleDrop = (acceptedFiles) => {
+    setFile(acceptedFiles[0]);
+    setPreview(URL.createObjectURL(acceptedFiles[0]));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (post !== "") {
-      const { data } = await axios.post(
-        postRoute,
-        { post },
-        {
-          headers: {
-            authorization: `token ${localStorage.getItem("user-token")}`,
-          },
-        }
-      );
+    setIsLoading(true);
+
+    const formData = new FormData();
+
+    formData.append("post", post);
+
+    formData.append("file", file);
+    console.log(formData.get("file"));
+
+    try {
+      const { data } = await axios.post(postRoute, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: `token ${localStorage.getItem("user-token")}`,
+        },
+      });
       if (data.success) {
+        const hasImage = data.post.path ? true : false;
         const newPost = {
           id: data.post.id,
           post: data.post.post,
           likes: 0,
           time: data.post.time,
+          hasImage,
+          path: data.post.path,
           user: {
             username: user.username,
             avatarImage: user.avatarImage,
@@ -45,28 +70,80 @@ function Post(props) {
         toast.success("Posted", toastOptions);
         props.setChanged(props.changed + 1);
         setPost("");
+        setFile(undefined);
+        setPreview(undefined);
       } else {
         toast.error("Something went wrong.", toastOptions);
       }
-    } else {
-      toast.error("Post can not be empty.", toastOptions);
+    } catch (err) {
+      console.error(err);
+      // handle error response
     }
+
+    setIsLoading(false);
   };
 
   return (
-    <div className="post relative flex">
-      <textarea
-        className="outline-none bg-[#343541] resize-none rounded-[0.3rem] opacity-[0.8] p-3 w-full flex-shrink-0 h-[8rem]"
-        placeholder={`What's happening ?`}
-        onChange={(e) => handleChange(e)}
-        value={post}
-      ></textarea>
-      <button
-        onClick={(e) => handleSubmit(e)}
-        className="w-16 text-center absolute bottom-0 right-0 border-2 border-white text-[white]  mx-1 my-2 py-1  rounded-[0.5rem] hover:bg-[#4e0eff] ease-in-out duration-300"
-      >
-        Post
-      </button>
+    <div className="post relative flex gap-4 px-4 py-4 bg-[#343541] rounded-[0.4rem]">
+      <img
+        src={`data:image/svg+xml;base64,${user.avatarImage}`}
+        className="w-11 h-11 object-cover rounded-full"
+        alt=""
+      />
+      <form className="w-full">
+        <textarea
+          className=" scroll outline-none bg-[#343541] resize-none  opacity-[0.8] p-3 w-full h-[4rem]"
+          placeholder={`What's happening ?`}
+          onChange={(e) => handleChange(e)}
+          onFocus={() => {
+            setFocus(true);
+          }}
+          value={post}
+        ></textarea>
+        <div
+          className={`ease-in-out duration-1000 fadein ${
+            focus ? " " : "hidden"
+          }`}
+        >
+          <button
+            onClick={(e) => handleSubmit(e)}
+            className="w-12 text-sm text-center absolute bottom-0 right-0 border-[0.5px] border-white text-[white]  mx-1 my-2 py-0.5  rounded-[0.5rem] hover:bg-[#4e0eff] ease-in-out duration-300"
+          >
+            {isLoading ? "Posting..." : "Post"}
+          </button>
+          <div className="mb-4 flex relative">
+            {preview && (
+              <>
+                {" "}
+                <img src={preview} alt="Preview" className="h-16" />{" "}
+                <span
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setPreview(null);
+                    setFile(null);
+                  }}
+                >
+                  <AiOutlineCloseCircle className="h-6 w-6 absolute top-0 left-0 bg-red-500 rounded-full " />
+                </span>{" "}
+              </>
+            )}
+          </div>
+          <span className="flex items-center gap-4 opacity-[0.6]">
+            <label htmlFor="upload">
+              <BsImage className="cursor-pointer hover:text-green-500 ease-in-out duration-300" />
+              <Dropzone onDrop={handleDrop}>
+                {({ getRootProps, getInputProps }) => (
+                  <div {...getRootProps()}>
+                    <input {...getInputProps()} id="upload" />
+                  </div>
+                )}
+              </Dropzone>
+            </label>
+            <GoLocation className="cursor-pointer hover:text-green-500 ease-in-out duration-300" />
+          </span>
+        </div>
+      </form>
+
       <ToastContainer></ToastContainer>
     </div>
   );

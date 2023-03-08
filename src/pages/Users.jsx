@@ -8,7 +8,7 @@ import { allUsersRoute, followRoute } from "../utils/APIRoutes";
 function Users() {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useContext(AuthContext);
+  const curUser = useContext(AuthContext).user;
 
   useEffect(() => {
     async function getData() {
@@ -81,18 +81,23 @@ function Users() {
                   </div>
                 </div>
               </div>
-              <div className="float-right">
-                <span
-                  onClick={() => follow(user.id)}
-                  id="follow-40"
-                  className={`float-right  px-2 py-0.5 border rounded-[9px] border-white text-white cursor-pointer ${
-                    user.isFollowed ? "text-black " : ""
-                  } hover:text-black hover:bg-white`}
-                >
-                  {" "}
-                  {user.isFollowed ? "Unfollow" : "Follow"}
-                </span>
-              </div>
+
+              {user.id !== curUser.id ? (
+                <div className="float-right">
+                  <span
+                    onClick={() => follow(user.id)}
+                    id="follow-40"
+                    className={`float-right  px-2 py-0.5 border rounded-[9px] border-white text-white cursor-pointer ${
+                      user.isFollowed ? "text-black " : ""
+                    } hover:text-black hover:bg-white`}
+                  >
+                    {" "}
+                    {user.isFollowed ? "Unfollow" : "Follow"}
+                  </span>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           );
         })

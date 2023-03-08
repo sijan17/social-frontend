@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineHeart, AiFillHeart, AiOutlineComment } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import TimeAgo from "../helpers/TimeAgo";
 import { likeRoute, postsRoute } from "../utils/APIRoutes";
@@ -41,7 +41,7 @@ function Posts(props) {
 
   const postList = props.posts.map((post) => {
     return (
-      <div key={post.id} className="bg-[#343541] mt-5 py-3 px-4 rounded-[8px]">
+      <div key={post.id} className="bg-[#343541] mt-3 py-3 px-4 rounded-[8px]">
         <div className="flex ">
           <div className="img shrink-0">
             <Link to={`/user/${post.user.username}`}>
@@ -53,41 +53,58 @@ function Posts(props) {
             </Link>
           </div>
 
-          <div className="content pl-3 w-screen">
+          <div className="content pl-3 w-screen ">
             <Link to={`/user/${post.user.username}`}>
-              <span className="cursor-pointer font-bold hover:underline">
+              <span className="cursor-pointer font-bold opacity-[0.6] hover:underline">
                 @{post.user.username}
               </span>
             </Link>
 
             <span className="font-thin pl-1"></span>
-            <span className="font-thin  pl-2 float-right">
+            <span className="font-thin opacioty-[0.6] text-sm pl-2 float-right">
               {TimeAgo(post.time)}
             </span>
 
             <p className="font-light mt-1">{post.post}</p>
+            {post.hasImage ? (
+              <img
+                className="w-full rounded-[10px] my-4"
+                src={`http://localhost:5000/${post.path}`}
+              />
+            ) : (
+              ""
+            )}
 
             <div
-              className={`react-section transition-colors duration-500 transform ${
-                post.isLiked ? "ease-in-out text-red-500" : ""
-              } `}
+              className={`react-section text-[#dcdee2] flex justify-end gap-[2rem] transition-colors  `}
             >
-              <span>
-                <span className=" float-right" id="toggle-39">
-                  <a id="likecount">
-                    <AiOutlineHeart
-                      className="inline mr-2 w-6 h-6 cursor-pointer "
-                      onClick={(event) => {
-                        likePost(post.id, event);
-                      }}
-                    />
-                    <span id="likes-39">{post.likes}</span>
-                  </a>
-                </span>
-                <a className=" font-thin ml-3" id="msg-39">
-                  {/* {post.likes == 0 ? " Be the first one to like" : ""} */}
-                </a>
-              </span>
+              <div className=" " id="toggle-39">
+                <AiOutlineComment className="inline mr-2 w-6 h-6 cursor-pointer " />
+                <span id="likes-39">0</span>
+              </div>
+              <div
+                className={`ease-in-out duration-500 transform ${
+                  post.isLiked ? " text-red-500" : ""
+                }`}
+                id="toggle-39"
+              >
+                {!post.isLiked ? (
+                  <AiOutlineHeart
+                    className="inline mr-2 w-6 h-6 cursor-pointer "
+                    onClick={(event) => {
+                      likePost(post.id, event);
+                    }}
+                  />
+                ) : (
+                  <AiFillHeart
+                    className="inline mr-2 w-6 h-6 cursor-pointer "
+                    onClick={(event) => {
+                      likePost(post.id, event);
+                    }}
+                  />
+                )}
+                <span className="font-bold">{post.likes}</span>
+              </div>
             </div>
           </div>
         </div>
