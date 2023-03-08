@@ -1,9 +1,8 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import { AiOutlineHeart, AiFillHeart, AiOutlineComment } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import TimeAgo from "../helpers/TimeAgo";
-import { likeRoute, postsRoute } from "../utils/APIRoutes";
+import { host, likeRoute } from "../utils/APIRoutes";
 function Posts(props) {
   const likePost = async (id) => {
     const index = props.posts.findIndex((obj) => obj.id === id);
@@ -69,7 +68,7 @@ function Posts(props) {
             {post.hasImage ? (
               <img
                 className="w-full rounded-[10px] my-4"
-                src={`http://localhost:5000/${post.path}`}
+                src={`${host}/${post.path}`}
               />
             ) : (
               ""
