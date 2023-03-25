@@ -27,8 +27,9 @@ function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true);
+
     if (handleValidation()) {
+      setIsLoading(true);
       const { username, password } = values;
       const { data } = await axios.post(loginRoute, { username, password });
 

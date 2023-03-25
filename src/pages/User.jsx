@@ -8,10 +8,16 @@ import { BiMessageRounded } from "react-icons/bi";
 import {
   followRoute,
   getAllUserDataRoute,
+  host,
   likeRoute,
 } from "../utils/APIRoutes";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { AiOutlineEdit, AiOutlineHeart } from "react-icons/ai";
+import {
+  AiFillHeart,
+  AiOutlineComment,
+  AiOutlineEdit,
+  AiOutlineHeart,
+} from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
 import { AuthContext } from "../services/AuthContext";
 import TimeAgo from "../helpers/TimeAgo";
@@ -36,6 +42,7 @@ function User() {
         },
       });
       if (data.success) {
+        console.log(data);
         setUser(data.user);
         setPosts(data.user.posts);
         setIsLoading(false);
@@ -100,7 +107,7 @@ function User() {
 
   const postList = posts.map((post) => {
     return (
-      <div key={post.id} className="bg-[#343541] mt-5 py-3 px-4 rounded-[8px]">
+      <div key={post.id} className="bg-[#343541] mt-3 py-3 px-4 rounded-[8px]">
         <div className="flex ">
           <div className="img shrink-0">
             <Link to={`/user/${user.username}`}>
@@ -112,41 +119,58 @@ function User() {
             </Link>
           </div>
 
-          <div className="content pl-3 w-screen">
+          <div className="content pl-3 w-screen ">
             <Link to={`/user/${user.username}`}>
-              <span className="cursor-pointer font-bold hover:underline">
+              <span className="cursor-pointer font-bold opacity-[0.6] hover:underline">
                 @{user.username}
               </span>
             </Link>
 
             <span className="font-thin pl-1"></span>
-            <span className="font-thin  pl-2 float-right">
+            <span className="font-thin opacioty-[0.6] text-sm pl-2 float-right">
               {TimeAgo(post.time)}
             </span>
 
             <p className="font-light mt-1">{post.post}</p>
+            {post.hasImage ? (
+              <img
+                className="w-full rounded-[10px] my-4"
+                src={`${host}/${post.path}`}
+              />
+            ) : (
+              ""
+            )}
 
             <div
-              className={`react-section transition-colors duration-500 transform ${
-                post.isLiked ? "ease-in-out text-red-500" : ""
-              } `}
+              className={`react-section text-[#dcdee2] flex justify-end gap-[2rem] transition-colors  `}
             >
-              <span>
-                <span className=" float-right" id="toggle-39">
-                  <a id="likecount">
-                    <AiOutlineHeart
-                      className="inline mr-2 w-6 h-6 cursor-pointer "
-                      onClick={(event) => {
-                        likePost(post.id, event);
-                      }}
-                    />
-                    <span id="likes-39">{post.likes}</span>
-                  </a>
-                </span>
-                <a className=" font-thin ml-3" id="msg-39">
-                  {/* {post.likes == 0 ? " Be the first one to like" : ""} */}
-                </a>
-              </span>
+              <div className=" " id="toggle-39">
+                <AiOutlineComment className="inline mr-2 w-6 h-6 cursor-pointer " />
+                <span id="likes-39">0</span>
+              </div>
+              <div
+                className={`ease-in-out duration-500 transform ${
+                  post.isLiked ? " text-red-500" : ""
+                }`}
+                id="toggle-39"
+              >
+                {!post.isLiked ? (
+                  <AiOutlineHeart
+                    className="inline mr-2 w-6 h-6 cursor-pointer "
+                    onClick={(event) => {
+                      likePost(post.id, event);
+                    }}
+                  />
+                ) : (
+                  <AiFillHeart
+                    className="inline mr-2 w-6 h-6 cursor-pointer "
+                    onClick={(event) => {
+                      likePost(post.id, event);
+                    }}
+                  />
+                )}
+                <span className="font-bold">{post.likes}</span>
+              </div>
             </div>
           </div>
         </div>
