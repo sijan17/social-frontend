@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import {
   AiFillHeart,
@@ -6,22 +6,48 @@ import {
   AiOutlineHeart,
   AiOutlineSearch,
 } from "react-icons/ai";
-import { host, searchPostsRoute, searchUsersRoute } from "../utils/APIRoutes";
+import {
+  host,
+  searchPostsRoute,
+  searchUsersRoute,
+  trendingTopicsRoute,
+} from "../utils/APIRoutes";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import TimeAgo from "../helpers/TimeAgo";
+import Loading from "../components/Loading";
 
 function Users() {
-  const [hidden, setHidden] = useState(true);
+  const [hidden, setHidden] = useState(false);
   const [users, setUsers] = useState([]);
   const [posts, setPosts] = useState([]);
-  const [active, setActive] = useState("users");
+  const [topics, setTopics] = useState([]);
+  const [active, setActive] = useState("trends");
   const [term, setTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    async function getData() {
+      setIsLoading(true);
+      const { data } = await axios.get(trendingTopicsRoute);
+      if (data.success) {
+        setTopics(data.topics);
+      }
+      setIsLoading(false);
+    }
+    getData();
+  }, []);
+
   const handleKeyPress = async (e) => {
     setHidden(false);
     const term = e.target.value;
     setTerm(term);
+    if (active == "trends") {
+      setActive("posts");
+    }
     if (term !== "") {
+      setIsLoading(true);
+      searchPosts(term);
       const { data } = await axios.get(`${searchUsersRoute}/${term}`, {
         headers: {
           authorization: `token ${localStorage.getItem("user-token")}`,
@@ -31,30 +57,55 @@ function Users() {
         setUsers(data.users);
         // setActive("users");
       }
-      console.log(data);
+
+      setIsLoading(false);
     } else {
-      setUsers(undefined);
+      setUsers([]);
     }
+
+    console.log(users);
   };
 
-  const searchPosts = async () => {
+  const searchPosts = async (term) => {
     if (term !== "") {
-      setActive("posts");
+      setIsLoading(true);
       const { data } = await axios.get(`${searchPostsRoute}/${term}`, {
         headers: {
           authorization: `token ${localStorage.getItem("user-token")}`,
         },
       });
       if (data.success) {
-        // setUsers(data.users);
         setPosts(data.posts);
-        // setActive("users");
       }
-      console.log(data);
+      setIsLoading(false);
     } else {
-      setPosts(undefined);
+      setPosts([]);
     }
   };
+
+  const handleTopicClick = async (topic) => {
+    setTerm(topic);
+    if (topic) {
+      searchPosts(topic);
+      setHidden(false);
+      setActive("posts");
+    }
+  };
+
+  const topicList =
+    topics &&
+    topics.map((topic, index) => {
+      return (
+        <div
+          key={index}
+          className="w-full cursor-pointer hover:bg-[#343541] flex justify-between items-center p-2 border border-[#343541] mb-2 rounded-[0.4rem]"
+          onClick={() => handleTopicClick(topic.topic)}
+        >
+          <div className="title  ">{topic.topic}</div>
+          <div className="count text-sm font-thin">{topic.postCount} posts</div>
+        </div>
+      );
+    });
 
   const usersList =
     users &&
@@ -178,7 +229,15 @@ function Users() {
           <AiOutlineSearch className="inline w-6 h-6 cursor-pointer" />
         </form>
 
-        <div className={`flex gap-8 ${hidden ? "hidden" : ""}`}>
+        <div className={`flex gap-8 text-sm ${hidden ? "hidden" : ""}`}>
+          <span
+            onClick={() => setActive("trends")}
+            className={`${
+              active == "trends" ? "border-b-2 border-white" : "cursor-pointer"
+            }`}
+          >
+            Trending
+          </span>
           <span
             onClick={() => setActive("users")}
             className={`${
@@ -187,8 +246,12 @@ function Users() {
           >
             Users
           </span>
+
           <span
-            onClick={() => searchPosts()}
+            onClick={() => {
+              searchPosts(term);
+              setActive("posts");
+            }}
             className={`${
               active == "posts" ? "border-b-2 border-white" : "cursor-pointer"
             }`}
@@ -197,9 +260,25 @@ function Users() {
           </span>
         </div>
 
-        <div className="search-users">
-          {active == "users" ? usersList : postList}
-        </div>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <div>
+            <div className="search-users">
+              {active == "users"
+                ? users[0]
+                  ? usersList
+                  : "Nothing to show."
+                : ""}
+              {active == "posts"
+                ? posts[0]
+                  ? postList
+                  : "Nothing to show."
+                : ""}
+              {active == "trends" && topicList}
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
